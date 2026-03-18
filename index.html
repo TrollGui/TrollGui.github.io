@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TrollGui</title>
 
-<!-- FAVICON (icone da aba) -->
 <link rel="icon" href="data:image/svg+xml,
 <svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22>
 <text x=%2210%22 y=%2270%22 font-size=%2270%22 fill=%22white%22>T</text>
@@ -13,139 +12,154 @@
 </svg>">
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Segoe UI", Arial, sans-serif;
-}
+* { margin:0; padding:0; box-sizing:border-box; font-family:Segoe UI; }
 
 body {
-    background: radial-gradient(circle at top, #3a3a3a, #1f1f1f);
-    color: white;
-    overflow: hidden;
+    background: radial-gradient(circle at top, #2f2f2f, #1a1a1a);
+    color:white;
+    overflow:hidden;
 }
 
-/* NAVBAR */
+/* LOADING */
+.loader {
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:#111;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+    font-size:24px;
+    letter-spacing:2px;
+    animation: fadeOut 1s ease 2s forwards;
+}
+
+@keyframes fadeOut {
+    to { opacity:0; visibility:hidden; }
+}
+
+/* PARTICLES */
+canvas {
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:-1;
+}
+
+/* NAV */
 .navbar {
-    display: flex;
-    align-items: center;
-    padding: 20px 50px;
+    padding:20px 50px;
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    font-weight: bold;
-}
+.logo .t { font-size:30px; }
+.logo .resto { color:#4da6ff; font-size:14px; }
 
-.logo .t {
-    font-size: 30px;
-}
-
-.logo .resto {
-    font-size: 14px;
-    color: #4da6ff;
-    margin-left: 2px;
-}
-
-/* CENTRO */
+/* CENTER */
 .center {
-    height: calc(100vh - 80px);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
-/* CARD (glass) */
+/* CARD */
 .card {
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(20px);
     background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    padding: 60px;
-    border-radius: 20px;
-    box-shadow: 0 0 40px rgba(0,0,0,0.5);
-    text-align: center;
+    border:1px solid rgba(255,255,255,0.1);
+    padding:60px;
+    border-radius:20px;
+    box-shadow:0 0 60px rgba(0,0,0,0.6);
+    text-align:center;
 }
 
-/* TEXTO */
+/* TITLE */
 .title {
-    font-size: 64px;
-    font-weight: bold;
-    margin-bottom: 30px;
-    text-shadow: 0 0 20px rgba(255,255,255,0.1);
+    font-size:64px;
+    margin-bottom:20px;
 }
 
-/* BOTÃO */
+/* DOWNLOAD COUNT */
+.counter {
+    margin-bottom:20px;
+    opacity:0.7;
+}
+
+/* SELECT */
+select {
+    padding:10px;
+    margin-bottom:20px;
+    border-radius:8px;
+    border:none;
+    background:#333;
+    color:white;
+}
+
+/* BUTTON */
 .btn {
-    position: relative;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: white;
-    padding: 15px 35px;
-    font-size: 16px;
-    border-radius: 12px;
-    cursor: pointer;
-    overflow: hidden;
-    transition: 0.3s;
+    position:relative;
+    padding:15px 35px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.2);
+    background:rgba(255,255,255,0.08);
+    color:white;
+    cursor:pointer;
+    overflow:hidden;
+    transition:0.3s;
 }
 
-/* brilho animado */
 .btn::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -75%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
-    transform: skewX(-25deg);
+    content:"";
+    position:absolute;
+    top:0;
+    left:-80%;
+    width:50%;
+    height:100%;
+    background:linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
 }
 
 .btn:hover::before {
     animation: brilho 1s forwards;
 }
 
-@keyframes brilho {
-    100% {
-        left: 130%;
-    }
-}
+@keyframes brilho { to { left:120%; } }
 
 .btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    transform:scale(1.05);
+    box-shadow:0 0 25px rgba(255,255,255,0.2);
 }
 
 .btn:active {
-    background: black;
-    transform: scale(0.95);
+    background:black;
+    transform:scale(0.95);
 }
 
 /* TOAST */
 .toast {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: linear-gradient(135deg, #2ecc71, #27ae60);
-    padding: 15px 25px;
-    border-radius: 12px;
-    font-size: 14px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.4);
-    opacity: 0;
-    transform: translateY(30px);
-    transition: 0.4s;
+    position:fixed;
+    bottom:30px;
+    right:30px;
+    background:linear-gradient(135deg,#2ecc71,#27ae60);
+    padding:15px 25px;
+    border-radius:12px;
+    opacity:0;
+    transform:translateY(20px);
+    transition:0.3s;
 }
 
 .toast.show {
-    opacity: 1;
-    transform: translateY(0);
+    opacity:1;
+    transform:translateY(0);
 }
 </style>
 </head>
 
 <body>
+
+<div class="loader">Loading TrollGui...</div>
+
+<canvas id="particles"></canvas>
 
 <div class="navbar">
     <div class="logo">
@@ -157,38 +171,92 @@ body {
 <div class="center">
     <div class="card">
         <div class="title">TrollGui</div>
+
+        <div class="counter" id="counter">Downloads: 0</div>
+
+        <select id="scriptSelect">
+            <option value="script1">Script 1</option>
+            <option value="script2">Script 2</option>
+            <option value="script3">Script 3</option>
+        </select>
+
+        <br>
+
         <button class="btn" onclick="copiarScript()">Get TrollGui Script</button>
     </div>
 </div>
 
-<div id="toast" class="toast">
-    Copiado o script na área de transferência
-</div>
+<div id="toast" class="toast">Copiado!</div>
 
-<!-- SOM -->
 <audio id="clickSound">
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b1f58.mp3?filename=click-124467.mp3">
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b1f58.mp3">
 </audio>
 
 <script>
-// ================= CONFIG =================
-const scriptParaCopiar = `COLE SEU SCRIPT AQUI`;
-// ==========================================
+// SCRIPTS CONFIG
+const scripts = {
+    script1: "SCRIPT 1 AQUI",
+    script2: "SCRIPT 2 AQUI",
+    script3: "SCRIPT 3 AQUI"
+};
 
-function copiarScript() {
-    navigator.clipboard.writeText(scriptParaCopiar);
+// COPY
+function copiarScript(){
+    let selected = document.getElementById("scriptSelect").value;
+    navigator.clipboard.writeText(scripts[selected]);
 
-    // som
     document.getElementById("clickSound").play();
 
-    // toast
     let toast = document.getElementById("toast");
     toast.classList.add("show");
 
-    setTimeout(() => {
-        toast.classList.remove("show");
-    }, 3000);
+    setTimeout(()=> toast.classList.remove("show"), 3000);
 }
+
+// COUNTER FAKE
+let count = 0;
+setInterval(()=>{
+    count += Math.floor(Math.random()*5);
+    document.getElementById("counter").innerText = "Downloads: " + count;
+},1000);
+
+// PARTICLES
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for(let i=0;i<80;i++){
+    particles.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        r:Math.random()*2,
+        d:Math.random()*1
+    });
+}
+
+function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="rgba(255,255,255,0.3)";
+    particles.forEach(p=>{
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fill();
+    });
+    move();
+}
+
+function move(){
+    particles.forEach(p=>{
+        p.y+=p.d;
+        if(p.y>canvas.height) p.y=0;
+    });
+}
+
+setInterval(draw,30);
 </script>
 
 </body>
