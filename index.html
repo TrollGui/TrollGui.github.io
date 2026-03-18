@@ -12,39 +12,63 @@
 </svg>">
 
 <style>
-* {
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Segoe UI;
-}
+* { margin:0; padding:0; box-sizing:border-box; font-family:Segoe UI; }
 
 body {
-    background:black;
+    background: radial-gradient(circle at top, #2a2a2a, #111);
     color:white;
     overflow:hidden;
 }
 
-/* GRID 3D CYBERPUNK */
+/* LOADING */
+.loader {
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:#0a0a0a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+    font-size:24px;
+    letter-spacing:3px;
+    color:#00ffff;
+    text-shadow:0 0 10px #00ffff;
+    animation: fadeOut 1s ease 2s forwards;
+}
+
+@keyframes fadeOut {
+    to { opacity:0; visibility:hidden; }
+}
+
+/* PARTICLES */
+canvas {
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:-2;
+}
+
+/* GRID 3D FUNDO */
 .grid {
     position:fixed;
     width:100%;
     height:100%;
     background:
-    linear-gradient(#00ffff22 1px, transparent 1px),
-    linear-gradient(90deg, #00ffff22 1px, transparent 1px);
-    background-size:40px 40px;
-    transform: perspective(500px) rotateX(60deg);
-    animation: moveGrid 10s linear infinite;
-    z-index:-2;
+    linear-gradient(#00ffff11 1px, transparent 1px),
+    linear-gradient(90deg, #00ffff11 1px, transparent 1px);
+    background-size:50px 50px;
+    transform: perspective(600px) rotateX(65deg);
+    animation: gridMove 12s linear infinite;
+    z-index:-3;
 }
 
-@keyframes moveGrid {
+@keyframes gridMove {
     from { background-position:0 0; }
-    to { background-position:0 40px; }
+    to { background-position:0 50px; }
 }
 
-/* GLOW DO MOUSE */
+/* GLOW MOUSE */
 .glow {
     position:fixed;
     width:300px;
@@ -73,30 +97,42 @@ body {
 
 /* CARD */
 .card {
-    backdrop-filter: blur(15px);
-    background: rgba(0,0,0,0.5);
-    border:1px solid #00ffff33;
-    padding:60px;
+    backdrop-filter: blur(25px);
+    background: rgba(0,0,0,0.6);
+    border:1px solid #00ffff22;
+    padding:70px;
     border-radius:20px;
-    box-shadow:0 0 50px #00ffff22;
+    box-shadow:
+        0 0 60px rgba(0,0,0,0.8),
+        0 0 40px #00ffff22;
     text-align:center;
+    transition:0.3s;
+}
+
+.card:hover {
+    box-shadow:
+        0 0 80px rgba(0,0,0,0.9),
+        0 0 60px #00ffff44;
 }
 
 /* TITLE */
 .title {
     font-size:64px;
     margin-bottom:30px;
-    text-shadow:0 0 20px #00ffff;
+    text-shadow:
+        0 0 10px #00ffff,
+        0 0 30px #00ffff55;
 }
 
 /* BUTTON */
 .btn {
     position:relative;
-    padding:15px 35px;
-    border-radius:12px;
+    padding:16px 40px;
+    border-radius:14px;
     border:1px solid #00ffff88;
-    background:transparent;
+    background:rgba(0,255,255,0.05);
     color:#00ffff;
+    font-size:15px;
     cursor:pointer;
     overflow:hidden;
     transition:0.3s;
@@ -117,13 +153,13 @@ body {
     animation: brilho 1s forwards;
 }
 
-@keyframes brilho {
-    to { left:120%; }
-}
+@keyframes brilho { to { left:120%; } }
 
 .btn:hover {
-    box-shadow:0 0 20px #00ffff, 0 0 40px #00ffff55;
-    transform:scale(1.05);
+    transform:scale(1.07);
+    box-shadow:
+        0 0 20px #00ffff,
+        0 0 40px #00ffff55;
 }
 
 .btn:active {
@@ -136,13 +172,14 @@ body {
     position:fixed;
     bottom:30px;
     right:30px;
-    background:#00ff99;
+    background:linear-gradient(135deg,#00ffcc,#00cc99);
     color:black;
     padding:15px 25px;
-    border-radius:10px;
+    border-radius:12px;
     opacity:0;
     transform:translateY(20px);
     transition:0.3s;
+    box-shadow:0 0 20px #00ffcc55;
 }
 
 .toast.show {
@@ -154,8 +191,12 @@ body {
 
 <body>
 
+<div class="loader">Loading TrollGui...</div>
+
 <div class="grid"></div>
 <div class="glow" id="glow"></div>
+
+<canvas id="particles"></canvas>
 
 <div class="navbar">
     <div class="logo">
@@ -178,7 +219,7 @@ body {
 </audio>
 
 <script>
-// CONFIG DO SCRIPT
+// SCRIPT CONFIG
 const scriptParaCopiar = `COLE SEU SCRIPT AQUI`;
 
 // COPY
@@ -190,10 +231,48 @@ function copiarScript(){
     let toast = document.getElementById("toast");
     toast.classList.add("show");
 
-    setTimeout(()=> toast.classList.remove("show"),3000);
+    setTimeout(()=> toast.classList.remove("show"), 3000);
 }
 
-// GLOW SEGUINDO MOUSE
+// PARTICLES
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for(let i=0;i<100;i++){
+    particles.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        r:Math.random()*2,
+        d:Math.random()*0.8
+    });
+}
+
+function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="rgba(0,255,255,0.5)";
+    particles.forEach(p=>{
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fill();
+    });
+    move();
+}
+
+function move(){
+    particles.forEach(p=>{
+        p.y+=p.d;
+        if(p.y>canvas.height) p.y=0;
+    });
+}
+
+setInterval(draw,30);
+
+// GLOW MOUSE
 document.addEventListener("mousemove", (e)=>{
     const glow = document.getElementById("glow");
     glow.style.left = e.clientX + "px";
