@@ -5,24 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TrollGui</title>
 
+<!-- FAVICON (icone da aba) -->
+<link rel="icon" href="data:image/svg+xml,
+<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22>
+<text x=%2210%22 y=%2270%22 font-size=%2270%22 fill=%22white%22>T</text>
+<text x=%2245%22 y=%2270%22 font-size=%2220%22 fill=%224da6ff%22>roll</text>
+</svg>">
+
 <style>
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Segoe UI", Arial, sans-serif;
 }
 
 body {
-    background: #2b2b2b;
+    background: radial-gradient(circle at top, #3a3a3a, #1f1f1f);
     color: white;
+    overflow: hidden;
 }
 
 /* NAVBAR */
 .navbar {
     display: flex;
     align-items: center;
-    padding: 20px 40px;
+    padding: 20px 50px;
 }
 
 .logo {
@@ -32,7 +40,7 @@ body {
 }
 
 .logo .t {
-    font-size: 28px;
+    font-size: 30px;
 }
 
 .logo .resto {
@@ -50,47 +58,84 @@ body {
     align-items: center;
 }
 
+/* CARD (glass) */
+.card {
+    backdrop-filter: blur(15px);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 60px;
+    border-radius: 20px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
 /* TEXTO */
 .title {
     font-size: 64px;
     font-weight: bold;
     margin-bottom: 30px;
+    text-shadow: 0 0 20px rgba(255,255,255,0.1);
 }
 
 /* BOTÃO */
 .btn {
-    background: #3a3a3a;
-    border: 2px solid white;
+    position: relative;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
     color: white;
-    padding: 15px 30px;
+    padding: 15px 35px;
     font-size: 16px;
     border-radius: 12px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+/* brilho animado */
+.btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: skewX(-25deg);
+}
+
+.btn:hover::before {
+    animation: brilho 1s forwards;
+}
+
+@keyframes brilho {
+    100% {
+        left: 130%;
+    }
 }
 
 .btn:hover {
-    background: #4a4a4a;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255,255,255,0.2);
 }
 
 .btn:active {
     background: black;
-    transform: scale(0.96);
+    transform: scale(0.95);
 }
 
-/* NOTIFICAÇÃO */
+/* TOAST */
 .toast {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    background: #2ecc71;
-    color: white;
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
     padding: 15px 25px;
-    border-radius: 10px;
+    border-radius: 12px;
     font-size: 14px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.3s ease;
+    transform: translateY(30px);
+    transition: 0.4s;
 }
 
 .toast.show {
@@ -102,7 +147,6 @@ body {
 
 <body>
 
-<!-- NAVBAR -->
 <div class="navbar">
     <div class="logo">
         <span class="t">T</span>
@@ -110,32 +154,37 @@ body {
     </div>
 </div>
 
-<!-- CONTEÚDO -->
 <div class="center">
-    <div class="title">TrollGui</div>
-    <button class="btn" onclick="copiarScript()">Get TrollGui Script</button>
+    <div class="card">
+        <div class="title">TrollGui</div>
+        <button class="btn" onclick="copiarScript()">Get TrollGui Script</button>
+    </div>
 </div>
 
-<!-- NOTIFICAÇÃO -->
 <div id="toast" class="toast">
     Copiado o script na área de transferência
 </div>
 
+<!-- SOM -->
+<audio id="clickSound">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b1f58.mp3?filename=click-124467.mp3">
+</audio>
+
 <script>
-// ================= CONFIGURAÇÃO =================
-// COLOQUE AQUI O TEXTO QUE VOCÊ QUER COPIAR
+// ================= CONFIG =================
 const scriptParaCopiar = `COLE SEU SCRIPT AQUI`;
-// ===============================================
+// ==========================================
 
 function copiarScript() {
     navigator.clipboard.writeText(scriptParaCopiar);
 
-    let toast = document.getElementById("toast");
+    // som
+    document.getElementById("clickSound").play();
 
-    // mostrar
+    // toast
+    let toast = document.getElementById("toast");
     toast.classList.add("show");
 
-    // esconder depois de 3s
     setTimeout(() => {
         toast.classList.remove("show");
     }, 3000);
