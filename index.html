@@ -1,530 +1,687 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>TrollGui</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TrollGui · Roblox style</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='10' y='70' font-size='70' fill='white'>T</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
 
-<link rel="icon" href="data:image/svg+xml,
-<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22>
-<text x=%2210%22 y=%2270%22 font-size=%2270%22 fill=%22white%22>T</text>
-</svg>">
+        body {
+            background: #0e0e10;
+            color: #eee;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-<!-- ================= STYLE ================= -->
-<style>
+        /* ---------- particles (subtle) ---------- */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:"Segoe UI",sans-serif;
-}
+        /* ---------- main container ---------- */
+        .gui-wrapper {
+            width: 96%;
+            max-width: 820px;
+            height: 92vh;
+            max-height: 700px;
+            background: rgba(10, 10, 14, 0.85);
+            backdrop-filter: blur(18px);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.02);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
 
-body{
-background:#111;
-color:white;
-overflow:hidden;
-}
+        /* ---------- title bar ---------- */
+        .title-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 22px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            flex-shrink: 0;
+        }
 
-/* ========= PARTICLES CANVAS ========= */
-#particles{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-z-index:-1;
-}
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #b388ff, #82b1ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(130, 177, 255, 0.2);
+        }
 
-/* ========= NAVBAR ========= */
+        .tabs {
+            display: flex;
+            gap: 6px;
+        }
 
-.navbar{
-display:flex;
-gap:20px;
-padding:20px 40px;
-align-items:center;
-}
+        .tab {
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.03);
+            color: #aaa;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
 
-.logo{
-font-size:28px;
-font-weight:bold;
-text-shadow:0 0 15px rgba(255,255,255,.3);
-}
+        .tab.active {
+            background: rgba(255, 255, 255, 0.07);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 12px rgba(130, 177, 255, 0.05);
+        }
 
-.tabs{
-margin-left:40px;
-display:flex;
-gap:10px;
-}
+        .tab:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
 
-.tab{
-padding:10px 22px;
-border-radius:10px;
-cursor:pointer;
-background:#444;
-transition:.3s;
-}
+        /* ---------- pages ---------- */
+        .page {
+            display: none;
+            flex: 1;
+            overflow: hidden;
+            padding: 8px 12px 12px 12px;
+        }
 
-.tab.active{
-background:white;
-color:black;
-font-weight:bold;
-}
+        .page.active {
+            display: flex;
+            flex-direction: column;
+        }
 
-.tab:hover{
-transform:scale(1.05);
-}
+        /* ---------- downloads (card) ---------- */
+        .download-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 28px;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
 
-/* ========= PAGES ========= */
+        .download-card .big-icon {
+            font-size: 72px;
+            opacity: 0.7;
+        }
 
-.page{
-display:none;
-height:calc(100vh - 80px);
-overflow:auto;
-}
+        .download-card h2 {
+            font-size: 36px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #b388ff, #82b1ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-.page.active{
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-}
+        .btn-primary {
+            background: linear-gradient(135deg, #7c4dff, #448aff);
+            border: none;
+            padding: 14px 44px;
+            border-radius: 60px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 24px rgba(68, 138, 255, 0.25);
+            letter-spacing: 0.3px;
+        }
 
-/* ========= CARD ========= */
+        .btn-primary:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 32px rgba(68, 138, 255, 0.35);
+        }
 
-.card{
-backdrop-filter:blur(20px);
-background:rgba(255,255,255,.05);
-border:1px solid rgba(255,255,255,.1);
-padding:60px;
-border-radius:20px;
-box-shadow:0 0 40px rgba(0,0,0,.6);
-text-align:center;
-}
+        .btn-primary:active {
+            transform: scale(0.95);
+        }
 
-.title{
-font-size:64px;
-text-shadow:0 0 25px rgba(255,255,255,.2);
-margin-bottom:30px;
-}
+        /* ---------- functions grid (scroll) ---------- */
+        .functions-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 4px;
+            margin-top: 6px;
+            scroll-behavior: smooth;
+        }
 
-/* ========= BUTTON ========= */
+        .functions-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
 
-.btn{
-background:linear-gradient(135deg,#4da6ff,#7f5cff);
-border:none;
-padding:15px 35px;
-border-radius:12px;
-color:white;
-font-size:16px;
-cursor:pointer;
-transition:.25s;
-box-shadow:0 0 20px rgba(77,166,255,.4);
-}
+        .functions-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+        }
 
-.btn:hover{
-transform:scale(1.08);
-}
+        .functions-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+        }
 
-.btn:active{
-transform:scale(.92);
-}
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            padding-bottom: 12px;
+        }
 
-/* ========= GRID ========= */
+        .func-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 18px 12px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: #ccc;
+            transition: 0.2s;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:25px;
-padding:40px;
-width:90%;
-max-width:1100px;
-}
+        .func-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(130, 177, 255, 0.15);
+            transform: translateY(-2px);
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
 
-.funcCard{
-background:#1e1e1e;
-border-radius:14px;
-padding:35px;
-cursor:pointer;
-text-align:center;
-transition:.25s;
-border:2px solid transparent;
-}
+        .func-card .badge {
+            display: inline-block;
+            font-size: 10px;
+            background: rgba(130, 177, 255, 0.12);
+            padding: 2px 10px;
+            border-radius: 40px;
+            color: #82b1ff;
+            margin-top: 6px;
+            font-weight: 400;
+        }
 
-.funcCard:hover{
-transform:translateY(-6px);
-border-color:#4da6ff;
-box-shadow:0 0 20px rgba(77,166,255,.4);
-}
+        /* ---------- modal ---------- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
 
-/* ========= MODAL ========= */
+        .modal-overlay.open {
+            display: flex;
+        }
 
-.modal{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,.8);
-display:none;
-justify-content:center;
-align-items:center;
-}
+        .modal-box {
+            background: #1a1a20;
+            border-radius: 28px;
+            max-width: 500px;
+            width: 90%;
+            padding: 32px 28px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+            animation: modalIn 0.25s ease;
+        }
 
-.modalContent{
-background:#181818;
-padding:40px;
-border-radius:15px;
-max-width:700px;
-max-height:80vh;
-overflow:auto;
-}
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.92) translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
 
-.modal h2{
-margin-bottom:15px;
-}
+        .modal-box h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #b388ff;
+        }
 
-/* ========= TOAST ========= */
+        .modal-box p {
+            line-height: 1.6;
+            color: #bbb;
+            font-size: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
 
-.toast{
-position:fixed;
-bottom:30px;
-right:30px;
-background:#2ecc71;
-padding:15px 25px;
-border-radius:10px;
-opacity:0;
-transition:.4s;
-}
+        .modal-box p::-webkit-scrollbar {
+            width: 4px;
+        }
+        .modal-box p::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
 
-.toast.show{
-opacity:1;
-}
+        .modal-close {
+            margin-top: 22px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 10px 24px;
+            border-radius: 40px;
+            color: #aaa;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 14px;
+        }
 
-/* scrollbar */
-::-webkit-scrollbar{width:8px;}
-::-webkit-scrollbar-thumb{background:#555;border-radius:10px;}
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+        }
 
-</style>
+        /* ---------- toast ---------- */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #2e7d32;
+            padding: 14px 28px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ---------- responsive ---------- */
+        @media (max-width: 600px) {
+            .gui-wrapper {
+                height: 96vh;
+                max-height: none;
+                border-radius: 18px;
+                width: 98%;
+            }
+            .title-bar {
+                padding: 10px 14px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .logo {
+                font-size: 18px;
+            }
+            .tab {
+                font-size: 12px;
+                padding: 4px 12px;
+            }
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 8px;
+            }
+            .func-card {
+                padding: 14px 8px;
+                font-size: 12px;
+            }
+            .download-card h2 {
+                font-size: 28px;
+            }
+            .btn-primary {
+                padding: 12px 32px;
+                font-size: 16px;
+            }
+            .modal-box {
+                padding: 24px 18px;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<canvas id="particles"></canvas>
-
-<!-- NAVBAR -->
-<div class="navbar">
-<div class="logo">TrollGui</div>
-
-<div class="tabs">
-<div class="tab active" onclick="switchTab('downloads',this)">Downloads</div>
-<div class="tab" onclick="switchTab('functions',this)">Functions</div>
-</div>
-</div>
-
-<!-- ================= DOWNLOAD PAGE ================= -->
-<div id="downloads" class="page active">
-
-<div class="card">
-<div class="title">TrollGui</div>
-<button class="btn" onclick="copiarScript()">Get TrollGui</button>
-</div>
-
-</div>
-
-<!-- ================= FUNCTIONS PAGE ================= -->
-<div id="functions" class="page">
-
-<div class="grid" id="functionsGrid"></div>
-
-</div>
-
-<!-- MODAL -->
-<div class="modal" id="modal" onclick="closeModal()">
-<div class="modalContent" onclick="event.stopPropagation()">
-<h2 id="modalTitle"></h2>
-<p id="modalText"></p>
-</div>
-</div>
-
-<div id="toast" class="toast">Script copied!</div>
-
-<audio id="clickSound">
-<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b1f58.mp3?filename=click-124467.mp3">
-</audio>
-
-<script>
-
-/* ================= PARTICLES ================= */
-
-const canvas=document.getElementById("particles");
-const ctx=canvas.getContext("2d");
-
-canvas.width=innerWidth;
-canvas.height=innerHeight;
-
-let particles=[];
-
-for(let i=0;i<120;i++){
-particles.push({
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height,
-s:Math.random()*2,
-v:1+Math.random()*2
-});
-}
-
-function animate(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-ctx.fillStyle="white";
-
-particles.forEach(p=>{
-p.y+=p.v;
-if(p.y>canvas.height)p.y=0;
-ctx.fillRect(p.x,p.y,p.s,p.s);
-});
-
-requestAnimationFrame(animate);
-}
-animate();
-
-/* ================= TAB SYSTEM ================= */
-
-function switchTab(id,el){
-
-document.querySelectorAll(".page")
-.forEach(p=>p.classList.remove("active"));
-
-document.getElementById(id).classList.add("active");
-
-document.querySelectorAll(".tab")
-.forEach(t=>t.classList.remove("active"));
-
-el.classList.add("active");
-
-clickSound.play();
-}
-
-/* ================= COPY ================= */
-
-const scriptParaCopiar=`loadstring(game:HttpGet("https://raw.githubusercontent.com/TrollGui/TrollGuiScript/refs/heads/main/TrollGui"))()`;
-
-function copiarScript(){
-navigator.clipboard.writeText(scriptParaCopiar);
-
-toast.classList.add("show");
-setTimeout(()=>toast.classList.remove("show"),2500);
-
-clickSound.play();
-}
-
-/* ================= FUNCTIONS DATA ================= */
-
-const functionsData=[
-
-{
-title:"TrollGui",
-text:"TrollGui é um script de GUI para Roblox. Possui diversos botões, cada um com uma função diferente. Aqui, mostraremos essas funções, para usar o TrollGui clique na aba de Get TrollGui que será copiado na area de transferencia o script, dai use em seu executor o script e execute, tem teclas de atalho para minimizar o TrollGui, o padrão é a tecla R e para fechar é apenas clicando no X no canto superior direito da gui."
-},
-
-{
-title:"Player Tracker",
-text:"Quando você executar o TrollGui a primeira coisa que apareçerá é o Player Tracker, você escreve o nome do jogador que está no jogo(pode ser nickname ou o nome de exibição dele) que irá apareçer a foto dele, ou você pode clicar em 📋 e selecionar o jogador, ou você pode clicar o Rastrear próximo que irá selecionar o jogador mais próximo de você, ou clique no botão Jogador Aleatório que vai selecionar um jogador aleatório que está no mesmo servidor que você, com o jogador selecionado você pode usar as seguintes coisas."
-},
-
-{
-title:"Speed",
-text:"A Speed apareçe abaixo do botão de jogador aleatório, ela é uma caixa de texto por padrão escrito 16, lá você pode alterar e abaixo dessa caixa de texto tem um botão escrito Set Speed que quando clicado você ganha a velocidade"
-},
-
-{
-title:"ESP Player/ESP All Players",
-text:"Quando você seleciona o jogador no Player Tracker e clica em ESP Player irá criar um HightLight(um contorno) verde fora e dentro deste jogador, e o ESP All Players irá ativar o ESP em todos os jogadores em seu servidor, novos jogadores que entrarem quando ativo não vão ficar com o Esp para não ter lag."
-},
-
-{
-title:"Spectate Player",
-text:"Você precisa selecionar o jogador no Player Tracker para este botão apareçer, quando apareçer ative ele e você poderá espectar o jogador selecionado do Player Tracker"
-},
-
-{
-title:"Loop Teleport e Teleport to Player",
-text:"Este botão só apareçe se você selecionar um jogador no Player Tracker, quando ativo este botão você teleporta em loop atrás do jogador, e o Teleport to Player você teleporta ao jogador selecionado."
-},
-
-{
-title:"Posição",
-text:"Abaixo de botão de Teleport to Player terá uma caixa de texto como padrão escrito X,Y,Z, lá você cita uma posição do jogo EX: 0,0,0 que quando você clica no botão escrito Teleportar á posição citada você é teleportado á esta posição, e quando você clica o botão escrito Pegar posição atual a caixa de texto é substituida pela posição atual sua do jogo."
-},
-
-{
-title:"First Person",
-text:"Quando ativo você fica em primeira pessoa, para sair basta abrir o menu do roblox e seu mouse será liberado e clicar no botão, pós o TrollGui apareçe até em cima do menu do roblox."
-},
-
-{
-title:"Fake Death 2",
-text:"Fake Death era para ser um Fake Death normal, mas você pode voar ao mesmo tempo caindo ao chão"
-},
-{
-  title:"QuietServer",
-text:"Você teleporta para o servidor mais vazio do jogo que você está atualmente"
-},
-{
-title:"Coordinates",
-text:"Este Botão cria um frame novo que apareçe em tempo real sua coordenada do jogo, quando clicado em Copy você copia as coordenadas, só que você copia em um formato diferente das Posições do TrollGui, EX: X: 894.69 | Y: 277.53 | Z: -832.24"
-},
-  {
-  title:"Click = Block",
-text:"Quando ativo seus cliques do mouse cria um bloco que só você vê, recomendo usar o Delete Part (X) para deletar estas partes"
-},
-      {
-  title:"WalkAllow",
-text:"Se o seu jogo não permite que seu jogador ande de forma alguma, com isto ativo irá poder fazer você andar"
-},
-  
-{
-title:"Noclip",
-text:"Quando ativo faça seu jogador não colidir com partes, ele pode atravessar paredes, uma boa combinação seria usar Noclip + CFrameFly"
-},
-    {
-  title:"LoudServer",
-text:"Te teleporta ao servidor mais cheio do seu jogo atual"
-},
-    {
-  title:"Invisible Fling",
-text:"Não é um fling invisivel mas é muito bom, recomendo usar ele com o Loop Teleport"
-},
-  {
-title:"SpinFling",
-text:"Este era para ser um fling, só que as vezes funciona e as vezes não funciona, ele é bom para trollar amigos, ele fica girando seu jogador muito rápido."
-},
-  {
-title:"Delete Part (X)",
-text:"Quando ativo e você clicar a tecla X em uma parte vai deletar dela mas só para você, os outros ainda verão ela, bom para burlar o anticheat de outros jogos."
-},
-  {
-title:"Fake Death",
-text:"Quanto ativo você vai cair no chão, você deita no chão dependendo, bom para jogos de pvp que o inimigo não irá conseguir te acertar."
-},
-  {
-title:"ProximityPrompt Insta",
-text:"Quando ativo todos os prompts do jogo serão instantaneo e poderão ativar de longe e através das paredes."
-},
-  {
-title:"ClickTp",
-text:"Quando ativo e você clicar em um lugar você será teleportado á ele, é um bom substituto da Speed em jogos com anticheat, você clica em uns lugares pertos rapidamente que você vai ir mais rapido que a velocidade normal."
-},
-
-{
-title:"Bigger Hitbox",
-text:"Quando clicado irá criar uma parte para impedir de você que toque na parte"
-},
-
-{
-title:"Unblock all",
-text:"Quando clicado ele desbloqueia TUDO do jogo, tipo ele libera o chat , os emotes, o backpack e o leader board se o jogo bloqueia isto."
-},
-
-{
-title:"Kill",
-text:"Irá matar você mesmo quando clicado"
-},
-
-{
-title:"Audio Viewer",
-text:"Quando clicado abre um visualizador de audio do jogo inteiro, irá verificar onde tem qualquer instancia Sound no jogo e mostrar, não foi feito por mim o Audio Viewer."
-},
-
-{
-title:"CFrameFly",
-text:"Quando ativo você poderá voar, só que em CFrame(Mesma coisa que voar normal, geral ainda te vê voando só que o jogo não detecta se você está voando.)"
-},
-
-{
-title:"float",
-text:"Quando ativo irá fazer o jogador não cair, nem o Walk Allow consegue fazelo mover"
-},
-
-{
-title:"WalkFling",
-text:"Quando clicado irá abrir uma gui que é do próprio trollgui, chamda TrollGui Fling, que terá um botão escrito \"Fling\" você pode ativar/desativar, é um touch fling(no caso quando você encosta em algum jogador ele é arremessado)."
-},
-
-{
-title:"Freecam",
-text:"Quando ativo irá liberar sua camera, ela vai ficar livre."
-},
-
-{
-title:"Egor Mode",
-text:"Quando ativo suas animações ficam aceleradas."
-},
-      {
-  title:"Infinite Jump",
-text:"Quando ativo você poderá pular muitas vezes no ar"
-},
-
-{
-title:"Dex",
-text:"Uma gui que não foi criada pelo trollgui mas que é boa, quando clicado irá abrir ela, ela é tipo um explorer do roblox studio, podemos ver os arquivos do jogo com isso."
-},
-
-{
-title:"Rejoin",
-text:"quando clicado você irá Reentrar no mesmo servidor"
-},
-{
-title:"Freeze Mode",
-text:"Quando ativo seu jogador consegue fazer a animação de andar mesmo parado, bom para trollar amigos fingindo ser um lag fake"
-},
-{
-title:"FullBright",
-text:"O jogo todo irá clarear, e irá sumir o fog do jogo quando ativo."
-},
-
-{
-title:"Places Viewer",
-text:"Quando clicado irá abrir uma Gui feita pelo TrollGui que mostra todas as SubPlaces do jogo atual que você está jogando."
-},
-
-{
-title:"Beta Mode",
-text:"quando ativo suas animações ficarão lentas."
-},
-  {
-title:"Extra",
-text:"Fake Death 2 foi feito sem querer, e o Bigger Hitbox foi feito sem querer, o TrollGui era muito basico mas depois ficou moderno e virou isso que vimos hoje em dia, e o TrollGui foi feito como uma piada."
-}
-];
-
-/* criar cards */
-
-const grid=document.getElementById("functionsGrid");
-
-functionsData.forEach(f=>{
-let div=document.createElement("div");
-div.className="funcCard";
-div.innerText=f.title;
-div.onclick=()=>openModal(f.title,f.text);
-grid.appendChild(div);
-});
-
-/* modal */
-
-function openModal(title,text){
-modal.style.display="flex";
-modalTitle.innerText=title;
-modalText.innerText=text;
-clickSound.play();
-}
-
-function closeModal(){
-modal.style.display="none";
-}
-
-</script>
+    <canvas id="particles"></canvas>
+
+    <div class="gui-wrapper">
+
+        <!-- TITLE BAR -->
+        <div class="title-bar">
+            <span class="logo">⛧ TrollGui</span>
+            <div class="tabs">
+                <div class="tab active" data-tab="downloads">Downloads</div>
+                <div class="tab" data-tab="functions">Functions</div>
+            </div>
+        </div>
+
+        <!-- DOWNLOAD PAGE -->
+        <div id="page-downloads" class="page active">
+            <div class="download-card">
+                <div class="big-icon">⬇️</div>
+                <h2>TrollGui</h2>
+                <button class="btn-primary" id="copyScriptBtn">📋 Get TrollGui</button>
+                <span style="font-size:13px;color:#666;margin-top:-8px;">script copiado para área de transferência</span>
+            </div>
+        </div>
+
+        <!-- FUNCTIONS PAGE -->
+        <div id="page-functions" class="page">
+            <div class="functions-scroll" id="functionsScroll">
+                <div class="grid" id="functionsGrid"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box">
+            <h2 id="modalTitle">Título</h2>
+            <p id="modalText">Descrição...</p>
+            <button class="modal-close" id="modalCloseBtn">Fechar</button>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast">✅ Copiado!</div>
+
+    <script>
+        // ============================================================
+        //  PARTICLES (minimal)
+        // ============================================================
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        for (let i = 0; i < 90; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                s: 0.6 + Math.random() * 1.4,
+                v: 0.4 + Math.random() * 1.2
+            });
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(255,255,255,0.06)';
+            particles.forEach(p => {
+                p.y += p.v * 0.3;
+                if (p.y > canvas.height) p.y = 0;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.s * 0.6, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // ============================================================
+        //  TAB SYSTEM
+        // ============================================================
+        const tabs = document.querySelectorAll('.tab');
+        const pages = {
+            downloads: document.getElementById('page-downloads'),
+            functions: document.getElementById('page-functions')
+        };
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const target = this.dataset.tab;
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                Object.keys(pages).forEach(key => {
+                    pages[key].classList.toggle('active', key === target);
+                });
+                // reflow para scroll
+                if (target === 'functions') {
+                    const grid = document.getElementById('functionsGrid');
+                    grid.style.display = 'grid';
+                }
+            });
+        });
+
+        // ============================================================
+        //  COPY SCRIPT (TrollGui)
+        // ============================================================
+        const scriptText = `loadstring(game:HttpGet("https://raw.githubusercontent.com/TrollGui/TrollGuiScript/refs/heads/main/TrollGui"))()`;
+        const toast = document.getElementById('toast');
+
+        document.getElementById('copyScriptBtn').addEventListener('click', function() {
+            navigator.clipboard.writeText(scriptText).then(() => {
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2200);
+            }).catch(() => {
+                // fallback
+                const area = document.createElement('textarea');
+                area.value = scriptText;
+                document.body.appendChild(area);
+                area.select();
+                document.execCommand('copy');
+                area.remove();
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2200);
+            });
+        });
+
+        // ============================================================
+        //  FUNCTIONS DATA (expandida com base no segundo script)
+        // ============================================================
+        const functionsData = [{
+            title: "TrollGui",
+            text: "TrollGui é um script de GUI para Roblox. Possui diversos botões, cada um com uma função diferente. Para usar, clique em 'Get TrollGui' e execute o script no seu executor. Tecla R para minimizar, X para fechar. Segurar a tecla ALT irá liberar seu mouse."
+        }, {
+            title: "Player Tracker",
+            text: "Selecione um jogador por nome ou display name. Veja a foto, rastreie o mais próximo ou aleatório. Com o jogador selecionado, ative funções como ESP, Spectate, Loop Teleport e mais."
+        }, {
+            title: "Speed",
+            text: "Altere a velocidade do seu personagem. Digite um valor na caixa e clique em 'Set Speed'."
+        }, {
+            title: "ESP Player / ESP All",
+            text: "ESP Player: destaca o jogador selecionado. ESP All: destaca todos os jogadores do servidor."
+        }, {
+            title: "Spectate Player",
+            text: "Especte o jogador selecionado. Ative/desative para seguir a câmera."
+        }, {
+            title: "Loop Teleport & Teleport",
+            text: "Loop Teleport: teleporta você atrás do jogador em loop. Teleport to Player: teleporta uma única vez."
+        }, {
+            title: "Posição (X,Y,Z)",
+            text: "Teleporte para coordenadas específicas ou pegue sua posição atual."
+        }, {
+            title: "First Person",
+            text: "Alterna para visão em primeira pessoa."
+        }, {
+            title: "Fake Death 2",
+            text: "Simula morte, mas você pode voar enquanto 'cai'."
+        }, {
+            title: "QuietServer",
+            text: "Teleporta para o servidor mais vazio do jogo atual."
+        }, {
+            title: "Coordinates",
+            text: "Abre um frame com suas coordenadas em tempo real. Copie no formato X: 123.45 | Y: 67.89 | Z: -32.10"
+        }, {
+            title: "Click = Block",
+            text: "Clique no chão para criar blocos(E pode aumentar eles). Use Delete Part (X) para remover."
+        }, {
+            title: "WalkAllow",
+            text: "Permite andar mesmo se o jogo bloquear movimento."
+        }, {
+            title: "Noclip",
+            text: "Atravesse paredes e partes. Combine com CFrameFly para voar."
+        }, {
+            title: "LoudServer",
+            text: "Teleporta para o servidor mais cheio do jogo atual."
+        }, {
+            title: "Invisible Fling",
+            text: "Fling invisível muito forte. Recomendado com Loop Teleport."
+        }, {
+            title: "SpinFling",
+            text: "Gira seu personagem rapidamente. Pode trollar amigos."
+        }, {
+            title: "Delete Part (X)",
+            text: "Pressione X em uma parte para deletá-la (apenas local)."
+        }, {
+            title: "Fake Death",
+            text: "Deita no chão. Bom para PvP, inimigos não acertam."
+        }, {
+            title: "ProximityPrompt Insta",
+            text: "Todos os prompts do jogo ficam instantâneos e ativam à distância e através das paredes."
+        }, {
+            title: "ClickTp",
+            text: "Clique em qualquer lugar para teleportar."
+        }, {
+            title: "Humanoid/GUI",
+            text: "Deixa eu jogador totalmente bugado(Aparece a Hitbox dele, e o que tem escondido do seu jogador visivel, e TODAS as GUIS do jogo serão visiveis)."
+        }, {
+            title: "Unblock all",
+            text: "Desbloqueia chat, emotes, backpack, leaderboard e mais."
+        }, {
+            title: "Kill",
+            text: "Mata seu personagem instantaneamente."
+        }, {
+            title: "Audio Viewer",
+            text: "Visualiza todos os sons do jogo."
+        }, {
+            title: "CFrameFly",
+            text: "Voe em CFrame (não detectado como voo pelos anticheats)."
+        }, {
+            title: "float",
+            text: "Flutua no ar em loop."
+        }, {
+            title: "WalkFling",
+            text: "Abre uma GUI de Fling, Quando ativo, encoste em jogadores para arremessá-los."
+        }, {
+            title: "Freecam",
+            text: "Libera a câmera para voar livremente."
+        }, {
+            title: "Egor Mode",
+            text: "Animações aceleradas."
+        }, {
+            title: "Infinite Jump",
+            text: "Pule quantas vezes quiser no ar."
+        }, {
+            title: "Dex",
+            text: "Abre o Dex Explorer (visualizar arquivos do jogo)."
+        }, {
+            title: "Rejoin",
+            text: "Reentra no mesmo jogo."
+        }, {
+            title: "Freeze Mode",
+            text: "Um FAKE LAG, no caso animação de andar parado."
+        }, {
+            title: "FullBright",
+            text: "Clareia o jogo e remove o FOG."
+        }, {
+            title: "Places Viewer",
+            text: "Mostra todas as sub-places do jogo atual."
+        }, {
+            title: "Beta Mode",
+            text: "Animações lentas."
+        }, {
+            title: "GodMode",
+            text: "Você não morre para KillBrick em jogos como parkour(por que usa CanTouch = false)."
+        }, {
+            title: "Underground",
+            text: "Te esconde debaixo do mapa."
+        }, {
+            title: "ReviveFree",
+            text: "Tenta reviver automaticamente usando remotes."
+        }, {
+            title: "Word Searcher",
+            text: "Usado em jogos como LAST LETTER ou algo do tipo para digitar sozinho o restante de uma palavra."
+        }
+        }];
+
+        // ============================================================
+        //  RENDER GRID (com scroll funcional)
+        // ============================================================
+        const grid = document.getElementById('functionsGrid');
+
+        functionsData.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'func-card';
+            card.innerHTML = `${item.title} <span class="badge">#${index+1}</span>`;
+            card.addEventListener('click', () => {
+                document.getElementById('modalTitle').textContent = item.title;
+                document.getElementById('modalText').textContent = item.text;
+                document.getElementById('modalOverlay').classList.add('open');
+            });
+            grid.appendChild(card);
+        });
+
+        // ============================================================
+        //  MODAL
+        // ============================================================
+        const modalOverlay = document.getElementById('modalOverlay');
+        document.getElementById('modalCloseBtn').addEventListener('click', () => {
+            modalOverlay.classList.remove('open');
+        });
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) modalOverlay.classList.remove('open');
+        });
+
+        // ============================================================
+        //  GARANTE SCROLL VISÍVEL (força reflow)
+        // ============================================================
+        setTimeout(() => {
+            const scroll = document.getElementById('functionsScroll');
+            if (scroll) {
+                scroll.scrollTop = 0;
+            }
+        }, 100);
+
+        // ============================================================
+        //  KEYBOARD SHORTCUT: R para minimizar (simbolico)
+        // ============================================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === 'r' && !e.ctrlKey && !e.metaKey) {
+                const wrapper = document.querySelector('.gui-wrapper');
+                wrapper.style.transition = 'opacity 0.2s';
+                wrapper.style.opacity = wrapper.style.opacity === '0.2' ? '1' : '0.2';
+            }
+        });
+
+        console.log('TrollGui · interface aprimorada com todas as funções');
+    </script>
 
 </body>
 </html>
