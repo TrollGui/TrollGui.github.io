@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrollGui</title>
-
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='10' y='70' font-size='70' fill='white'>T</text></svg>">
-
     <style>
         * {
             margin: 0;
@@ -14,7 +12,6 @@
             box-sizing: border-box;
             font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
         }
-
         body {
             background: #0d0d11;
             color: white;
@@ -24,8 +21,6 @@
             align-items: center;
             justify-content: center;
         }
-
-        /* ========= PARTICLES CANVAS ========= */
         #particles {
             position: fixed;
             top: 0;
@@ -35,8 +30,6 @@
             z-index: -1;
             pointer-events: none;
         }
-
-        /* ========= GUI CONTAINER ========= */
         .gui-container {
             width: 96%;
             max-width: 780px;
@@ -52,8 +45,6 @@
             overflow: hidden;
             position: relative;
         }
-
-        /* ========= NAVBAR ========= */
         .navbar {
             display: flex;
             align-items: center;
@@ -63,7 +54,6 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
             flex-shrink: 0;
         }
-
         .logo {
             font-size: 22px;
             font-weight: 700;
@@ -73,12 +63,10 @@
             -webkit-text-fill-color: transparent;
             text-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
         }
-
         .tabs {
             display: flex;
             gap: 4px;
         }
-
         .tab {
             padding: 6px 18px;
             border-radius: 40px;
@@ -90,32 +78,25 @@
             transition: 0.2s;
             border: 1px solid transparent;
         }
-
         .tab.active {
             background: rgba(255, 255, 255, 0.06);
             color: #fff;
             border-color: rgba(255, 255, 255, 0.06);
         }
-
         .tab:hover {
             color: #fff;
             background: rgba(255, 255, 255, 0.03);
         }
-
-        /* ========= PAGES ========= */
         .page {
             display: none;
             flex: 1;
             overflow: hidden;
             padding: 12px 14px 14px 14px;
         }
-
         .page.active {
             display: flex;
             flex-direction: column;
         }
-
-        /* ========= DOWNLOAD CARD ========= */
         .download-card {
             flex: 1;
             display: flex;
@@ -128,12 +109,10 @@
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.02);
         }
-
         .download-card .icon {
             font-size: 64px;
             opacity: 0.6;
         }
-
         .download-card h1 {
             font-size: 38px;
             font-weight: 300;
@@ -142,13 +121,11 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
         .download-card .sub {
             color: #666;
             font-size: 14px;
             margin-top: -8px;
         }
-
         .btn-primary {
             background: linear-gradient(135deg, #8a8a8a, #4a4a4a);
             border: none;
@@ -162,45 +139,36 @@
             box-shadow: 0 4px 28px rgba(255, 255, 255, 0.1);
             letter-spacing: 0.3px;
         }
-
         .btn-primary:hover {
             transform: scale(1.03);
             box-shadow: 0 6px 36px rgba(255, 255, 255, 0.2);
         }
-
         .btn-primary:active {
             transform: scale(0.95);
         }
-
-        /* ========= FUNCTIONS SCROLL ========= */
         .functions-scroll {
             flex: 1;
             overflow-y: auto;
             padding-right: 4px;
             margin-top: 4px;
         }
-
         .functions-scroll::-webkit-scrollbar {
             width: 4px;
         }
-
         .functions-scroll::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.02);
             border-radius: 10px;
         }
-
         .functions-scroll::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.08);
             border-radius: 10px;
         }
-
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 8px;
             padding-bottom: 10px;
         }
-
         .func-card {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.03);
@@ -214,7 +182,6 @@
             cursor: pointer;
             backdrop-filter: blur(2px);
         }
-
         .func-card:hover {
             background: rgba(255, 255, 255, 0.04);
             border-color: rgba(255, 255, 255, 0.12);
@@ -222,7 +189,6 @@
             color: #fff;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         }
-
         .func-card .badge {
             display: block;
             font-size: 9px;
@@ -234,8 +200,6 @@
             font-weight: 400;
             letter-spacing: 0.3px;
         }
-
-        /* ========= MODAL ========= */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -249,11 +213,9 @@
             justify-content: center;
             z-index: 999;
         }
-
         .modal-overlay.open {
             display: flex;
         }
-
         .modal-box {
             background: #18181f;
             border-radius: 24px;
@@ -264,7 +226,6 @@
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
             animation: modalIn 0.2s ease;
         }
-
         @keyframes modalIn {
             from {
                 opacity: 0;
@@ -275,14 +236,12 @@
                 transform: scale(1) translateY(0);
             }
         }
-
         .modal-box h2 {
             font-size: 22px;
             font-weight: 600;
             margin-bottom: 10px;
             color: #ffffff;
         }
-
         .modal-box p {
             line-height: 1.6;
             color: #bbb;
@@ -291,7 +250,6 @@
             overflow-y: auto;
             padding-right: 4px;
         }
-
         .modal-box p::-webkit-scrollbar {
             width: 3px;
         }
@@ -299,7 +257,6 @@
             background: rgba(255, 255, 255, 0.08);
             border-radius: 10px;
         }
-
         .modal-close {
             margin-top: 18px;
             background: rgba(255, 255, 255, 0.04);
@@ -312,13 +269,10 @@
             transition: 0.2s;
             font-size: 14px;
         }
-
         .modal-close:hover {
             background: rgba(255, 255, 255, 0.06);
             color: #fff;
         }
-
-        /* ========= TOAST ========= */
         .toast {
             position: fixed;
             bottom: 28px;
@@ -336,13 +290,10 @@
             pointer-events: none;
             border: 1px solid rgba(139, 195, 74, 0.08);
         }
-
         .toast.show {
             opacity: 1;
             transform: translateY(0);
         }
-
-        /* ========= RESPONSIVE ========= */
         @media (max-width: 600px) {
             .gui-container {
                 width: 98%;
@@ -387,12 +338,8 @@
     </style>
 </head>
 <body>
-
     <canvas id="particles"></canvas>
-
     <div class="gui-container">
-
-        <!-- ====== NAVBAR ====== -->
         <div class="navbar">
             <span class="logo">TrollGui</span>
             <div class="tabs">
@@ -400,8 +347,6 @@
                 <div class="tab" data-tab="functions">Functions</div>
             </div>
         </div>
-
-        <!-- ====== DOWNLOAD PAGE ====== -->
         <div id="page-downloads" class="page active">
             <div class="download-card">
                 <div class="icon">⬇️</div>
@@ -410,17 +355,12 @@
                 <span class="sub">COPIAR SCRIPT</span>
             </div>
         </div>
-
-        <!-- ====== FUNCTIONS PAGE ====== -->
         <div id="page-functions" class="page">
             <div class="functions-scroll" id="functionsScroll">
                 <div class="grid" id="functionsGrid"></div>
             </div>
         </div>
-
     </div>
-
-    <!-- ====== MODAL ====== -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box">
             <h2 id="modalTitle">Título</h2>
@@ -428,19 +368,12 @@
             <button class="modal-close" id="modalCloseBtn">Fechar</button>
         </div>
     </div>
-
-    <!-- ====== TOAST ====== -->
     <div class="toast" id="toast">✅ Copiado!</div>
-
     <script>
-        // ============================================================
-        //  PARTICLES
-        // ============================================================
         const canvas = document.getElementById('particles');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
         const particles = [];
         for (let i = 0; i < 80; i++) {
             particles.push({
@@ -450,7 +383,6 @@
                 v: 0.3 + Math.random() * 1.0
             });
         }
-
         function animateParticles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = 'rgba(255,255,255,0.04)';
@@ -464,16 +396,11 @@
             requestAnimationFrame(animateParticles);
         }
         animateParticles();
-
-        // ============================================================
-        //  TAB SYSTEM
-        // ============================================================
         const tabs = document.querySelectorAll('.tab');
         const pages = {
             downloads: document.getElementById('page-downloads'),
             functions: document.getElementById('page-functions')
         };
-
         tabs.forEach(tab => {
             tab.addEventListener('click', function() {
                 const target = this.dataset.tab;
@@ -484,13 +411,8 @@
                 });
             });
         });
-
-        // ============================================================
-        //  COPY SCRIPT
-        // ============================================================
         const scriptText = `loadstring(game:HttpGet("https://raw.githubusercontent.com/TrollGui/TrollGuiScript/refs/heads/main/TrollGui"))()`;
         const toast = document.getElementById('toast');
-
         document.getElementById('copyScriptBtn').addEventListener('click', function() {
             navigator.clipboard.writeText(scriptText).then(() => {
                 toast.classList.add('show');
@@ -506,10 +428,6 @@
                 setTimeout(() => toast.classList.remove('show'), 2200);
             });
         });
-
-        // ============================================================
-        //  FUNCTIONS DATA (ATUALIZADA com seus novos textos)
-        // ============================================================
         const functionsData = [{
             title: "TrollGui",
             text: "TrollGui é um script de GUI para Roblox. Possui diversos botões, cada um com uma função diferente. Para usar, clique em 'Get TrollGui' e execute o script no seu executor. Tecla R para minimizar, X para fechar. Segurar a tecla ALT irá liberar seu mouse."
@@ -634,12 +552,7 @@
             title: "Word Searcher",
             text: "Usado em jogos como LAST LETTER ou algo do tipo para digitar sozinho o restante de uma palavra."
         }];
-
-        // ============================================================
-        //  RENDER GRID
-        // ============================================================
         const grid = document.getElementById('functionsGrid');
-
         functionsData.forEach((item, index) => {
             const card = document.createElement('div');
             card.className = 'func-card';
@@ -651,10 +564,6 @@
             });
             grid.appendChild(card);
         });
-
-        // ============================================================
-        //  MODAL
-        // ============================================================
         const modalOverlay = document.getElementById('modalOverlay');
         document.getElementById('modalCloseBtn').addEventListener('click', () => {
             modalOverlay.classList.remove('open');
@@ -662,10 +571,6 @@
         modalOverlay.addEventListener('click', (e) => {
             if (e.target === modalOverlay) modalOverlay.classList.remove('open');
         });
-
-        // ============================================================
-        //  KEYBOARD SHORTCUT: R (minimizar)
-        // ============================================================
         document.addEventListener('keydown', (e) => {
             if (e.key.toLowerCase() === 'r' && !e.ctrlKey && !e.metaKey) {
                 const container = document.querySelector('.gui-container');
@@ -673,15 +578,10 @@
                 container.style.opacity = container.style.opacity === '0.15' ? '1' : '0.15';
             }
         });
-
-        // ============================================================
-        //  GARANTE SCROLL FUNCIONAL
-        // ============================================================
         setTimeout(() => {
             const scroll = document.getElementById('functionsScroll');
             if (scroll) scroll.scrollTop = 0;
         }, 50);
     </script>
-
 </body>
 </html>
